@@ -3071,9 +3071,12 @@ guid_to_name_cb(zfs_handle_t *zhp, void *arg)
 	if (gtnd->skip != NULL &&
 	    (slash = strrchr(zhp->zfs_name, '/')) != NULL &&
 	    strcmp(slash + 1, gtnd->skip) == 0) {
-		fprintf(stderr, "[gtnd override] %s", gtnd->skip);
-		//zfs_close(zhp);
-		//return (0);
+		if (strcmp(gtnd->skip, "containers") != 0) {
+			fprintf(stderr, "[gtnd override] %s\n", gtnd->skip);
+		} else {
+			zfs_close(zhp);
+			return (0);
+		}
 	}
 
 	if (zfs_prop_get_int(zhp, ZFS_PROP_GUID) == gtnd->guid &&
